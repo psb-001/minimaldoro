@@ -207,6 +207,16 @@ function setupAutoUpdater() {
   autoUpdater.autoDownload = true
   autoUpdater.autoInstallOnAppQuit = true
 
+  try {
+    autoUpdater.setFeedURL({
+      provider: 'github',
+      owner: 'psb-001',
+      repo: 'minimaldoro',
+    })
+  } catch (e) {
+    console.error('Failed to set auto-updater feed URL:', e)
+  }
+
   autoUpdater.on('update-available', (info) => {
     console.log('Update available:', info.version)
   })
@@ -233,7 +243,11 @@ function setupAutoUpdater() {
     console.error('Auto-update error:', err)
   })
 
-  autoUpdater.checkForUpdates()
+  try {
+    autoUpdater.checkForUpdates()
+  } catch (e) {
+    console.error('Auto-update check failed:', e)
+  }
 }
 
 function buildTrayMenu() {
