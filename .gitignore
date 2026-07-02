@@ -1,0 +1,9 @@
+node_modules/
+dist/
+release/
+Minimaldoro-Setup-0.1.0/
+Minimaldoro-Setup-0.1.0.tar.gz
+.playwright-mcp/
+*.log
+.DS_Store
+Thumbs.db

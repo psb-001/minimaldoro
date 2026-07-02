@@ -1,0 +1,84 @@
+{
+  "name": "minimaldoro",
+  "version": "0.1.0",
+  "description": "Elegant countdown timer and event tracker for desktop",
+  "author": "Minimaldoro Team",
+  "private": true,
+  "scripts": {
+    "dev:vite": "vite",
+    "dev:electron": "wait-on http://localhost:5173 && cross-env VITE_DEV=true electron .",
+    "dev": "concurrently --kill-others \"npm run dev:vite\" \"npm run dev:electron\"",
+    "build": "vite build",
+    "build:app": "vite build && electron-builder",
+    "postinstall": "electron-rebuild -f -w better-sqlite3"
+  },
+  "build": {
+    "appId": "com.minimaldoro.app",
+    "productName": "Minimaldoro",
+    "icon": "assets/icon.png",
+    "copyright": "Copyright © 2025 Minimaldoro Team. All rights reserved.",
+    "directories": {
+      "output": "release",
+      "buildResources": "build"
+    },
+    "compression": "maximum",
+    "asar": true,
+    "asarUnpack": [
+      "node_modules/better-sqlite3/**"
+    ],
+    "files": [
+      "dist/**/*",
+      "electron/**/*",
+      "assets/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "assets/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Minimaldoro",
+      "deleteAppDataOnUninstall": false
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "minimaldoro",
+        "repo": "minimaldoro"
+      }
+    ]
+  },
+  "main": "electron/main.js",
+  "dependencies": {
+    "better-sqlite3": "^11.7.0"
+  },
+  "devDependencies": {
+    "@electron/rebuild": "^4.0.4",
+    "@sveltejs/vite-plugin-svelte": "^5.0.0",
+    "autoprefixer": "^10.4.20",
+    "concurrently": "^9.1.2",
+    "cross-env": "^7.0.3",
+    "electron": "^33.4.0",
+    "electron-builder": "^26.15.3",
+    "png-to-ico": "^3.0.1",
+    "pngjs": "^7.0.0",
+    "postcss": "^8.5.3",
+    "sharp": "^0.35.3",
+    "svelte": "^5.25.0",
+    "tailwindcss": "^3.4.17",
+    "vite": "^6.3.0",
+    "wait-on": "^8.0.3"
+  }
+}
