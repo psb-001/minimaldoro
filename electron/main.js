@@ -45,10 +45,26 @@ function createWindow() {
   })
 
   mainWindow.once('ready-to-show', () => {
-    if (!isAutoStarting) {
-      mainWindow.show()
-    }
+    console.log('Window ready-to-show')
+    mainWindow.show()
   })
+
+  mainWindow.once('show', () => {
+    console.log('Window shown')
+    mainWindow.focus()
+  })
+
+  mainWindow.webContents.on('did-fail-load', (event, errorCode, errorDescription, validatedURL) => {
+    console.error('Failed to load:', validatedURL, errorCode, errorDescription)
+  })
+
+  setTimeout(() => {
+    if (mainWindow && !mainWindow.isDestroyed() && !mainWindow.isVisible()) {
+      console.log('Fallback: forcing window show after timeout')
+      mainWindow.show()
+      mainWindow.focus()
+    }
+  }, 1500)
 
   mainWindow.on('close', (e) => {
     if (!isQuitting) {
@@ -206,16 +222,6 @@ function setupAutoUpdater() {
 
   autoUpdater.autoDownload = true
   autoUpdater.autoInstallOnAppQuit = true
-
-  try {
-    autoUpdater.setFeedURL({
-      provider: 'github',
-      owner: 'psb-001',
-      repo: 'minimaldoro',
-    })
-  } catch (e) {
-    console.error('Failed to set auto-updater feed URL:', e)
-  }
 
   autoUpdater.on('update-available', (info) => {
     console.log('Update available:', info.version)
