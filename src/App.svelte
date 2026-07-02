@@ -238,7 +238,9 @@
 
   .shell {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    background: #fafafc;
+    background-color: #fafafc;
+    background-image: radial-gradient(circle, rgba(0, 0, 0, 0.06) 1px, transparent 1px);
+    background-size: 20px 20px;
     border-radius: 16px;
     border: 1px solid rgba(0,0,0,0.04);
     box-shadow: 0 16px 48px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,1);
