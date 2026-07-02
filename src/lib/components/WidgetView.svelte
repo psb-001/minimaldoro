@@ -171,10 +171,7 @@
     flex-direction: column;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     box-sizing: border-box;
-    box-shadow:
-      0 20px 60px rgba(0, 0, 0, 0.1),
-      0 0 0 1px rgba(255, 255, 255, 0.6) inset,
-      0 1px 0 rgba(255, 255, 255, 0.9) inset;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
     -webkit-app-region: drag;
     position: relative;
     color: #1a1d21;
