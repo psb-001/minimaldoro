@@ -41,8 +41,10 @@
           <div class="app-version">Version {APP_VERSION}</div>
           <p class="desc">An elegant countdown timer and event tracker for your desktop. Track upcoming events, celebrate milestones, and stay on top of what matters — all from your menubar.</p>
           <div class="credits">
-            <div class="credit-label">Made with care by</div>
-            <div class="credit-name">Minimaldoro Team</div>
+            <div class="credit-label">Developed by</div>
+            <div class="credit-name">psb-001</div>
+            <a class="credit-link" href="https://github.com/psb-001" target="_blank" rel="noopener noreferrer">github.com/psb-001</a>
+            <a class="credit-link" href="https://github.com/psb-001/minimaldoro" target="_blank" rel="noopener noreferrer">github.com/psb-001/minimaldoro</a>
           </div>
         </div>
       {/if}
@@ -248,6 +250,21 @@
     font-size: 14px;
     font-weight: 600;
     color: #1a1d21;
+  }
+
+  .credit-link {
+    font-size: 12px;
+    font-weight: 500;
+    color: #fa520f;
+    text-decoration: none;
+    margin-top: 2px;
+    display: inline-block;
+    transition: color 0.2s;
+  }
+
+  .credit-link:hover {
+    color: #a82e04;
+    text-decoration: underline;
   }
 
   .section h2 {

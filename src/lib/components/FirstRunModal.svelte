@@ -5,7 +5,19 @@
 
   let termsAccepted = $state(false)
   let privacyAccepted = $state(false)
+  let showTerms = $state(false)
+  let showPrivacy = $state(false)
   let error = $state('')
+
+  function toggleTerms() {
+    showTerms = !showTerms
+    if (showTerms) showPrivacy = false
+  }
+
+  function togglePrivacy() {
+    showPrivacy = !showPrivacy
+    if (showPrivacy) showTerms = false
+  }
 
   function handleAccept() {
     if (!termsAccepted || !privacyAccepted) {
@@ -26,13 +38,27 @@
       <p class="intro">Before you get started, please review and accept our policies.</p>
 
       <div class="policy">
-        <h3>Terms & Conditions</h3>
-        <p>By using Minimaldoro, you agree to use this software responsibly and in accordance with applicable laws. Minimaldoro is provided "as is" without warranty of any kind. The authors are not liable for any data loss or damages arising from use of this application.</p>
+        <button type="button" class="policy-toggle" onclick={toggleTerms} aria-expanded={showTerms}>
+          <span class="policy-title">Terms & Conditions</span>
+          <span class="policy-arrow">{showTerms ? '−' : '+'}</span>
+        </button>
+        {#if showTerms}
+          <div class="policy-content">
+            <p>By using Minimaldoro, you agree to use this software responsibly and in accordance with applicable laws. Minimaldoro is provided "as is" without warranty of any kind. The authors are not liable for any data loss or damages arising from use of this application.</p>
+          </div>
+        {/if}
       </div>
 
       <div class="policy">
-        <h3>Privacy Policy</h3>
-        <p>All your event data is stored locally on your device using SQLite. We do not collect, transmit, or share any personal information with third parties. Your data never leaves your computer.</p>
+        <button type="button" class="policy-toggle" onclick={togglePrivacy} aria-expanded={showPrivacy}>
+          <span class="policy-title">Privacy Policy</span>
+          <span class="policy-arrow">{showPrivacy ? '−' : '+'}</span>
+        </button>
+        {#if showPrivacy}
+          <div class="policy-content">
+            <p>All your event data is stored locally on your device using SQLite. We do not collect, transmit, or share any personal information with third parties. Your data never leaves your computer.</p>
+          </div>
+        {/if}
       </div>
 
       {#if error}
@@ -118,23 +144,53 @@
   .policy {
     background: #f9fafb;
     border-radius: 12px;
-    padding: 16px;
     border: 1px solid rgba(0,0,0,0.04);
+    overflow: hidden;
   }
 
-  .policy h3 {
+  .policy-toggle {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-family: 'Inter', -apple-system, sans-serif;
+    transition: background 0.15s;
+  }
+
+  .policy-toggle:hover {
+    background: rgba(0,0,0,0.02);
+  }
+
+  .policy-title {
     font-size: 13px;
     font-weight: 700;
     color: #1a1d21;
-    margin: 0 0 8px;
     text-transform: uppercase;
     letter-spacing: 0.4px;
   }
 
-  .policy p {
+  .policy-arrow {
+    font-size: 16px;
+    font-weight: 500;
+    color: #8a96a3;
+    width: 20px;
+    text-align: center;
+    flex-shrink: 0;
+    margin-left: 12px;
+  }
+
+  .policy-content {
+    padding: 0 16px 16px;
+  }
+
+  .policy-content p {
     font-size: 12.5px;
     color: #4b5563;
-    line-height: 1.6;
+    line-height: 1.65;
     margin: 0;
   }
 
