@@ -165,15 +165,16 @@
     width: 100%;
     height: 100%;
     background: #fafafc;
-    border-radius: 16px;
-    border: 1px solid rgba(0, 0, 0, 0.04);
+    border-radius: 18px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
     display: flex;
     flex-direction: column;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     box-sizing: border-box;
     box-shadow:
-      0 16px 48px rgba(0, 0, 0, 0.08),
-      inset 0 1px 0 rgba(255, 255, 255, 1);
+      0 20px 60px rgba(0, 0, 0, 0.1),
+      0 0 0 1px rgba(255, 255, 255, 0.6) inset,
+      0 1px 0 rgba(255, 255, 255, 0.9) inset;
     -webkit-app-region: drag;
     position: relative;
     color: #1a1d21;
@@ -183,9 +184,9 @@
   .tint {
     position: absolute;
     inset: 0;
-    border-radius: 16px;
+    border-radius: 18px;
     background: var(--event-color);
-    opacity: 0.06;
+    opacity: 0.08;
     pointer-events: none;
     z-index: 0;
   }
@@ -198,12 +199,13 @@
   .color-bar {
     position: absolute;
     top: 0;
-    left: 20px;
-    right: 20px;
+    left: 16px;
+    right: 16px;
     height: 3px;
     background: var(--event-color);
-    border-radius: 0 0 3px 3px;
+    border-radius: 0 0 4px 4px;
     z-index: 3;
+    opacity: 0.9;
   }
 
   .resize-handle {
@@ -240,7 +242,7 @@
     align-items: center;
     justify-content: center;
     text-align: center;
-    padding: 16px 14px 14px;
+    padding: 18px 16px 16px;
     position: relative;
     z-index: 2;
     gap: 0;
@@ -251,59 +253,60 @@
   .count-row {
     display: flex;
     align-items: baseline;
-    gap: 4px;
+    gap: 6px;
     line-height: 1;
   }
 
   .count-num {
     font-family: 'Playfair Display', Georgia, serif;
-    font-size: 44px;
+    font-size: 48px;
     font-weight: 600;
-    color: #1a1d21;
-    letter-spacing: -2px;
+    color: var(--event-color);
+    letter-spacing: -2.5px;
     line-height: 1;
   }
 
   .count-unit {
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 600;
-    color: var(--event-color);
-    letter-spacing: 0.2px;
+    color: #6b7280;
+    letter-spacing: 0.3px;
   }
 
   .count-sub {
     font-size: 10px;
-    font-weight: 500;
-    color: #8a96a3;
-    letter-spacing: 0.5px;
+    font-weight: 600;
+    color: #9ca3af;
+    letter-spacing: 1px;
     text-transform: uppercase;
-    margin-top: 1px;
-    margin-bottom: 8px;
+    margin-top: 3px;
+    margin-bottom: 10px;
   }
 
   .divider {
-    width: 24px;
-    height: 1px;
-    background: rgba(0, 0, 0, 0.06);
-    margin-bottom: 7px;
+    width: 28px;
+    height: 1.5px;
+    background: rgba(0, 0, 0, 0.08);
+    margin-bottom: 9px;
+    border-radius: 1px;
   }
 
   .event-name {
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 600;
-    color: #3d4654;
+    color: #374151;
     max-width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    letter-spacing: 0.1px;
+    letter-spacing: 0.2px;
   }
 
   .event-date {
-    font-size: 9.5px;
-    color: #a0aab5;
-    margin-top: 2px;
-    font-weight: 400;
+    font-size: 10px;
+    color: #9ca3af;
+    margin-top: 3px;
+    font-weight: 500;
   }
 
   /* ---- Empty state ---- */
@@ -342,39 +345,39 @@
 
   .ctx-menu {
     position: fixed;
-    bottom: 4px;
-    right: 4px;
+    bottom: 8px;
+    right: 8px;
     background: #fafafc;
-    border: 1px solid rgba(0, 0, 0, 0.04);
-    border-radius: 12px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    border-radius: 14px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
     padding: 6px;
     z-index: 60;
-    min-width: 140px;
+    min-width: 150px;
     -webkit-app-region: no-drag;
   }
 
   .ctx-item {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
     width: 100%;
-    padding: 8px 12px;
+    padding: 9px 14px;
     border: none;
     background: transparent;
     font-size: 13px;
     font-weight: 500;
     font-family: 'Inter', -apple-system, sans-serif;
-    color: #333d47;
+    color: #374151;
     cursor: pointer;
-    border-radius: 8px;
+    border-radius: 9px;
     transition: background 0.15s;
     white-space: nowrap;
     text-align: left;
   }
 
   .ctx-item:hover {
-    background: rgba(0, 0, 0, 0.04);
+    background: rgba(0, 0, 0, 0.05);
   }
 
   .ctx-danger {
