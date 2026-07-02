@@ -90,7 +90,7 @@
 <style>
   .card {
     background: #fff;
-    border: 1px solid rgba(0,0,0,0.04);
+    border: 1px solid rgba(0,0,0,0.06);
     border-radius: 16px;
     padding: 20px 18px 18px;
     display: flex;
@@ -108,7 +108,7 @@
   .card:hover {
     transform: translateY(-4px);
     box-shadow: 0 12px 28px rgba(0,0,0,0.08);
-    border-color: rgba(0,0,0,0.08);
+    border-color: rgba(0,0,0,0.1);
   }
 
   .card.celebrated {
@@ -148,24 +148,26 @@
     width: 28px;
     height: 28px;
     border-radius: 8px;
-    border: none;
-    background: transparent;
-    color: #b0b8c3;
+    border: 1px solid rgba(0,0,0,0.06);
+    background: rgba(255,255,255,0.7);
+    color: #6b7280;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: background 0.2s, color 0.2s;
+    transition: background 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
+    backdrop-filter: blur(8px);
   }
 
   .card-action-btn:first-child {
-    opacity: 1;
-    color: #8a96a3;
+    color: #6b7280;
   }
 
   .card-action-btn:first-child:hover {
-    background: rgba(0, 0, 0, 0.06);
+    background: rgba(255,255,255,0.95);
     color: #fa520f;
+    border-color: rgba(0,0,0,0.1);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
   }
 
   .card-action-btn:last-child {
@@ -173,24 +175,25 @@
   }
 
   .card:hover .card-action-btn:last-child {
-    opacity: 0.7;
+    opacity: 1;
   }
 
   .card-action-btn:last-child:hover {
-    opacity: 1 !important;
-    background: rgba(0, 0, 0, 0.06);
-    color: #1f1f1f;
+    background: rgba(255,255,255,0.95);
+    color: #1a1d21;
+    border-color: rgba(0,0,0,0.1);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
   }
 
   .menu-dropdown {
     position: absolute;
     top: 34px;
     right: 0;
-    background: rgba(255, 255, 255, 0.95);
+    background: rgba(255, 255, 255, 0.96);
     backdrop-filter: blur(12px);
-    border: 1px solid rgba(0,0,0,0.06);
-    border-radius: 10px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+    border: 1px solid rgba(0,0,0,0.08);
+    border-radius: 12px;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.14);
     padding: 6px;
     z-index: 100;
     min-width: 150px;
@@ -230,8 +233,8 @@
   .card-label {
     font-size: 11px;
     font-weight: 600;
-    color: #a8a8a8;
-    letter-spacing: 0.8px;
+    color: #6b7280;
+    letter-spacing: 0.6px;
     text-transform: uppercase;
     text-align: left;
     white-space: nowrap;
@@ -240,7 +243,7 @@
   }
 
   .card.celebrated .card-label {
-    color: #c7c7c7;
+    color: #9ca3af;
   }
 
   .card-num {
