@@ -91,12 +91,19 @@
     <div class="glow"></div>
     <div class="content">
       {#if daysLeft < 0}
-        <div class="count-num passed">—</div>
-        <div class="event-name">{nextEvent.title}</div>
+        <div class="count-row">
+          <span class="count-num passed">—</span>
+          <span class="count-label">passed</span>
+        </div>
       {:else}
-        <div class="count-num">{daysLeft}</div>
-        <div class="event-name">{nextEvent.title}</div>
+        <div class="count-row">
+          <span class="count-num">{daysLeft}</span>
+          <span class="count-label">{daysLeft === 1 ? 'day' : 'days'}</span>
+        </div>
       {/if}
+      <div class="divider"></div>
+      <div class="event-title">{nextEvent.title}</div>
+      <div class="event-date">{new Date(nextEvent.date + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</div>
     </div>
     <div class="resize-handle"></div>
   {:else}
@@ -187,15 +194,15 @@
 
   .glow {
     position: absolute;
-    left: 12px;
-    right: 12px;
+    left: 16px;
+    right: 16px;
     top: 50%;
     transform: translateY(-50%);
-    height: 60px;
+    height: 56px;
     background: var(--event-color);
-    opacity: 0.06;
+    opacity: 0.07;
     border-radius: 50%;
-    filter: blur(16px);
+    filter: blur(18px);
     pointer-events: none;
     z-index: 0;
   }
@@ -207,19 +214,28 @@
     align-items: center;
     justify-content: center;
     text-align: center;
-    padding: 20px 16px 16px 20px;
+    padding: 18px 14px 14px;
     position: relative;
     z-index: 2;
-    gap: 6px;
+    gap: 0;
     min-height: 0;
+  }
+
+  .count-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 4px;
+    line-height: 1;
+    margin-bottom: 2px;
   }
 
   .count-num {
     font-family: 'Playfair Display', Georgia, serif;
-    font-size: 48px;
+    font-size: 44px;
     font-weight: 600;
     color: var(--event-color);
-    letter-spacing: -2.5px;
+    letter-spacing: -2px;
     line-height: 1;
   }
 
@@ -227,14 +243,38 @@
     color: #c7c7c7;
   }
 
-  .event-name {
-    font-size: 11px;
+  .count-label {
+    font-size: 12px;
     font-weight: 600;
     color: #6b7280;
+    letter-spacing: 0.3px;
+    text-transform: lowercase;
+  }
+
+  .divider {
+    width: 20px;
+    height: 1px;
+    background: rgba(0, 0, 0, 0.08);
+    margin: 6px 0 6px;
+    border-radius: 1px;
+  }
+
+  .event-title {
+    font-size: 11px;
+    font-weight: 600;
+    color: #374151;
     max-width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    letter-spacing: 0.2px;
+    margin-bottom: 1px;
+  }
+
+  .event-date {
+    font-size: 10px;
+    color: #9ca3af;
+    font-weight: 500;
     letter-spacing: 0.3px;
   }
 
