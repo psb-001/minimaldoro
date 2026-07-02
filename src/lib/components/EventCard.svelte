@@ -171,7 +171,7 @@
   }
 
   .card-action-btn:last-child {
-    opacity: 0;
+    opacity: 0.5;
   }
 
   .card:hover .card-action-btn:last-child {
@@ -179,6 +179,7 @@
   }
 
   .card-action-btn:last-child:hover {
+    opacity: 1;
     background: rgba(255,255,255,0.95);
     color: #1a1d21;
     border-color: rgba(0,0,0,0.1);
