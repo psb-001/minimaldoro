@@ -13,7 +13,7 @@
 
   <div class="topbar-actions">
     <button class="btn-icon" aria-label="About" onclick={oninfo}>
-      {@html ICONS.grid}
+      {@html ICONS.dots}
     </button>
     <button class="btn-icon" aria-label="Minimize" onclick={() => minimizeWindow()}>
       {@html ICONS.minus}
