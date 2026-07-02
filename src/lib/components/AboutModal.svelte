@@ -14,7 +14,15 @@
     { id: 'terms', label: 'Terms & Conditions' },
   ]
 
-  const APP_VERSION = '0.1.0'
+  let appVersion = $state('0.1.0')
+
+  $effect(() => {
+    if (window.api?.getVersion) {
+      window.api.getVersion().then(v => {
+        if (v) appVersion = v
+      }).catch(() => {})
+    }
+  })
 </script>
 
 <div class="backdrop" role="dialog" aria-modal="true" aria-labelledby="about-title">
@@ -42,7 +50,7 @@
       {#if activeTab === 'about'}
         <div class="section">
           <div class="app-name">Minimaldoro</div>
-          <div class="app-version">Version {APP_VERSION}</div>
+          <div class="app-version">Version {appVersion}</div>
           <p class="desc">An elegant countdown timer and event tracker for your desktop. Track upcoming events, celebrate milestones, and stay on top of what matters — all from your menubar.</p>
           <div class="credits">
             <div class="credit-label">Developed by</div>

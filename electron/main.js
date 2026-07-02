@@ -347,6 +347,10 @@ function registerIpcHandlers() {
       tray.setContextMenu(buildTrayMenu())
     }
   })
+
+  ipcMain.handle('app:version', () => {
+    return app.getVersion()
+  })
 }
 
 let notificationInterval = null;

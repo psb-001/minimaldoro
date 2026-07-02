@@ -18,4 +18,5 @@ contextBridge.exposeInMainWorld('api', {
   getSetting: (key) => ipcRenderer.invoke('settings:get', key),
   setSetting: (key, value) => ipcRenderer.invoke('settings:set', key, value),
   listWidgets: () => ipcRenderer.invoke('widget:list'),
+  getVersion: () => ipcRenderer.invoke('app:version'),
 })
