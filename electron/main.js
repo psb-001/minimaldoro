@@ -206,11 +206,6 @@ function setupAutoUpdater() {
 
   autoUpdater.autoDownload = true
   autoUpdater.autoInstallOnAppQuit = true
-  autoUpdater.setFeedURL({
-    provider: 'github',
-    owner: 'psb-001',
-    repo: 'minimaldoro',
-  })
 
   autoUpdater.on('update-available', (info) => {
     console.log('Update available:', info.version)
@@ -445,11 +440,12 @@ if (!gotTheLock) {
 
     // Apply auto-start setting on startup; enable by default so widgets restore on boot
     let autoStart = getSetting('autoStart')
+    const firstRunComplete = getSetting('termsAccepted') === 'true' && getSetting('privacyAccepted') === 'true'
     if (autoStart === null || autoStart === undefined) {
       autoStart = 'true'
       setSetting('autoStart', 'true')
     }
-    if (autoStart === 'true') {
+    if (autoStart === 'true' && firstRunComplete) {
       app.setLoginItemSettings({ openAtLogin: true, openAsHidden: true })
       isAutoStarting = true
     }
