@@ -88,23 +88,21 @@
 
   {#if nextEvent}
     <div class="accent"></div>
+    <div class="glow"></div>
     <div class="content">
       {#if daysLeft < 0}
-        <div class="count-num">—</div>
-        <div class="count-label">passed</div>
+        <div class="count-num passed">—</div>
+        <div class="event-name">{nextEvent.title}</div>
       {:else}
         <div class="count-num">{daysLeft}</div>
-        <div class="count-label">{daysLeft === 1 ? 'day' : 'days'} left</div>
+        <div class="event-name">{nextEvent.title}</div>
       {/if}
-      <div class="divider"></div>
-      <div class="event-title">{nextEvent.title}</div>
-      <div class="event-date">{new Date(nextEvent.date + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</div>
     </div>
     <div class="resize-handle"></div>
   {:else}
     <div class="empty-state">
       <div class="empty-icon">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
           <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
           <line x1="16" y1="2" x2="16" y2="6"/>
           <line x1="8" y1="2" x2="8" y2="6"/>
@@ -132,9 +130,9 @@
     top: 8px;
     right: 8px;
     z-index: 10;
-    width: 24px;
-    height: 24px;
-    border-radius: 7px;
+    width: 22px;
+    height: 22px;
+    border-radius: 6px;
     border: 1px solid rgba(0, 0, 0, 0.06);
     background: rgba(255, 255, 255, 0.8);
     backdrop-filter: blur(8px);
@@ -179,12 +177,27 @@
   .accent {
     position: absolute;
     left: 0;
-    top: 12px;
-    bottom: 12px;
-    width: 4px;
+    top: 16px;
+    bottom: 16px;
+    width: 3px;
     background: var(--event-color);
-    border-radius: 0 4px 4px 0;
+    border-radius: 0 3px 3px 0;
     z-index: 3;
+  }
+
+  .glow {
+    position: absolute;
+    left: 12px;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 60px;
+    background: var(--event-color);
+    opacity: 0.06;
+    border-radius: 50%;
+    filter: blur(16px);
+    pointer-events: none;
+    z-index: 0;
   }
 
   .content {
@@ -194,56 +207,35 @@
     align-items: center;
     justify-content: center;
     text-align: center;
-    padding: 18px 16px 16px 20px;
+    padding: 20px 16px 16px 20px;
     position: relative;
     z-index: 2;
-    gap: 0;
+    gap: 6px;
     min-height: 0;
   }
 
   .count-num {
     font-family: 'Playfair Display', Georgia, serif;
-    font-size: 40px;
+    font-size: 48px;
     font-weight: 600;
     color: var(--event-color);
-    letter-spacing: -2px;
+    letter-spacing: -2.5px;
     line-height: 1;
   }
 
-  .count-label {
-    font-size: 12px;
+  .count-num.passed {
+    color: #c7c7c7;
+  }
+
+  .event-name {
+    font-size: 11px;
     font-weight: 600;
     color: #6b7280;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-    margin-top: 4px;
-    margin-bottom: 10px;
-  }
-
-  .divider {
-    width: 20px;
-    height: 1.5px;
-    background: rgba(0, 0, 0, 0.08);
-    margin-bottom: 8px;
-    border-radius: 1px;
-  }
-
-  .event-title {
-    font-size: 12px;
-    font-weight: 600;
-    color: #374151;
     max-width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    letter-spacing: 0.2px;
-  }
-
-  .event-date {
-    font-size: 10px;
-    color: #9ca3af;
-    margin-top: 2px;
-    font-weight: 500;
+    letter-spacing: 0.3px;
   }
 
   .empty-state {
@@ -258,14 +250,14 @@
 
   .empty-icon {
     color: var(--event-color);
-    opacity: 0.4;
+    opacity: 0.35;
     margin-bottom: 2px;
   }
 
   .empty-text {
     font-size: 12px;
     font-weight: 600;
-    color: #6b7280;
+    color: #9ca3af;
   }
 
   .resize-handle {
