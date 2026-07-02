@@ -41,27 +41,32 @@
   }
 
   .btn-icon {
-    width: 28px;
-    height: 28px;
-    border-radius: 8px;
-    border: none;
-    background: transparent;
-    color: #a0aab5;
+    width: 30px;
+    height: 30px;
+    border-radius: 9px;
+    border: 1px solid rgba(0,0,0,0.06);
+    background: rgba(255,255,255,0.7);
+    color: #6b7280;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: background 0.2s, color 0.2s;
+    transition: background 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
+    backdrop-filter: blur(8px);
   }
 
   .btn-icon:hover {
-    background: rgba(0,0,0,0.04);
+    background: rgba(255,255,255,0.95);
     color: #1a1d21;
+    border-color: rgba(0,0,0,0.1);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
   }
 
   .btn-close:hover {
     background: #fee2e2;
     color: #cc3a05;
+    border-color: #fecaca;
+    box-shadow: 0 2px 8px rgba(204,58,5,0.12);
   }
 
   .btn-add {
