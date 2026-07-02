@@ -43,7 +43,7 @@
 
   let nextEvent = $derived(
     (pinnedEventId !== null && !Number.isNaN(pinnedEventId))
-      ? events.find((e) => e.id === pinnedEventId) || upcoming[0] 
+      ? events.find((e) => e.id === pinnedEventId) || upcoming[0]
       : upcoming[0]
   )
   let daysLeft = $derived(
@@ -85,33 +85,26 @@
       {@html ICONS.x}
     </button>
   {/if}
+
   {#if nextEvent}
-    <div class="color-bar"></div>
-    <div class="tint"></div>
-    <div class="resize-handle"></div>
+    <div class="accent"></div>
     <div class="content">
       {#if daysLeft < 0}
-        <div class="count-row">
-          <span class="count-num">—</span>
-        </div>
-        <div class="count-sub">passed</div>
+        <div class="count-num">—</div>
+        <div class="count-label">passed</div>
       {:else}
-        <div class="count-row">
-          <span class="count-num">{daysLeft}</span>
-          <span class="count-unit">{daysLeft === 1 ? 'day' : 'days'}</span>
-        </div>
-        <div class="count-sub">remaining</div>
+        <div class="count-num">{daysLeft}</div>
+        <div class="count-label">{daysLeft === 1 ? 'day' : 'days'} left</div>
       {/if}
       <div class="divider"></div>
-      <div class="event-name">{nextEvent.title}</div>
+      <div class="event-title">{nextEvent.title}</div>
       <div class="event-date">{new Date(nextEvent.date + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</div>
     </div>
-  {:else}
-    <div class="tint empty-tint"></div>
     <div class="resize-handle"></div>
-    <div class="content empty-content">
+  {:else}
+    <div class="empty-state">
       <div class="empty-icon">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
           <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
           <line x1="16" y1="2" x2="16" y2="6"/>
           <line x1="8" y1="2" x2="8" y2="6"/>
@@ -119,8 +112,8 @@
         </svg>
       </div>
       <div class="empty-text">No events yet</div>
-      <div class="empty-hint">Create one to get started</div>
     </div>
+    <div class="resize-handle"></div>
   {/if}
 </div>
 
@@ -136,36 +129,36 @@
 <style>
   .close-btn {
     position: absolute;
-    top: 6px;
-    right: 6px;
+    top: 8px;
+    right: 8px;
     z-index: 10;
-    width: 22px;
-    height: 22px;
-    border-radius: 6px;
-    border: none;
-    background: rgba(0, 0, 0, 0.06);
-    color: #8a96a3;
+    width: 24px;
+    height: 24px;
+    border-radius: 7px;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(8px);
+    color: #6b7280;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 0;
-    opacity: 0.7;
-    transition: background 0.15s, color 0.15s;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
     -webkit-app-region: no-drag;
   }
 
   .close-btn:hover {
     background: #cc3a05;
     color: #fff;
-    opacity: 1;
+    border-color: #cc3a05;
   }
 
   .widget {
     width: 100%;
     height: 100%;
     background: #fff;
-    border-radius: 18px;
+    border-radius: 16px;
     border: 1px solid rgba(0, 0, 0, 0.06);
     display: flex;
     flex-direction: column;
@@ -183,31 +176,96 @@
     box-shadow: 0 12px 36px rgba(0, 0, 0, 0.1);
   }
 
-  .tint {
+  .accent {
     position: absolute;
-    inset: 0;
-    border-radius: 18px;
+    left: 0;
+    top: 12px;
+    bottom: 12px;
+    width: 4px;
     background: var(--event-color);
-    opacity: 0.08;
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  .empty-tint {
-    background: var(--event-color);
-    opacity: 0.04;
-  }
-
-  .color-bar {
-    position: absolute;
-    top: 0;
-    left: 16px;
-    right: 16px;
-    height: 3px;
-    background: var(--event-color);
-    border-radius: 0 0 4px 4px;
+    border-radius: 0 4px 4px 0;
     z-index: 3;
-    opacity: 0.9;
+  }
+
+  .content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 18px 16px 16px 20px;
+    position: relative;
+    z-index: 2;
+    gap: 0;
+    min-height: 0;
+  }
+
+  .count-num {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 40px;
+    font-weight: 600;
+    color: var(--event-color);
+    letter-spacing: -2px;
+    line-height: 1;
+  }
+
+  .count-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #6b7280;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-top: 4px;
+    margin-bottom: 10px;
+  }
+
+  .divider {
+    width: 20px;
+    height: 1.5px;
+    background: rgba(0, 0, 0, 0.08);
+    margin-bottom: 8px;
+    border-radius: 1px;
+  }
+
+  .event-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: #374151;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    letter-spacing: 0.2px;
+  }
+
+  .event-date {
+    font-size: 10px;
+    color: #9ca3af;
+    margin-top: 2px;
+    font-weight: 500;
+  }
+
+  .empty-state {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 16px;
+  }
+
+  .empty-icon {
+    color: var(--event-color);
+    opacity: 0.4;
+    margin-bottom: 2px;
+  }
+
+  .empty-text {
+    font-size: 12px;
+    font-weight: 600;
+    color: #6b7280;
   }
 
   .resize-handle {
@@ -237,108 +295,6 @@
     border-color: rgba(0, 0, 0, 0.3);
   }
 
-  .content {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 16px 14px 14px;
-    position: relative;
-    z-index: 2;
-    gap: 0;
-    min-height: 0;
-  }
-
-  /* ---- Event state ---- */
-
-  .count-row {
-    display: flex;
-    align-items: baseline;
-    gap: 6px;
-    line-height: 1;
-  }
-
-  .count-num {
-    font-family: 'Playfair Display', Georgia, serif;
-    font-size: 40px;
-    font-weight: 600;
-    color: var(--event-color);
-    letter-spacing: -2px;
-    line-height: 1;
-  }
-
-  .count-unit {
-    font-size: 13px;
-    font-weight: 600;
-    color: #6b7280;
-    letter-spacing: 0.3px;
-  }
-
-  .count-sub {
-    font-size: 9.5px;
-    font-weight: 600;
-    color: #9ca3af;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    margin-top: 2px;
-    margin-bottom: 8px;
-  }
-
-  .divider {
-    width: 24px;
-    height: 1.5px;
-    background: rgba(0, 0, 0, 0.08);
-    margin-bottom: 8px;
-    border-radius: 1px;
-  }
-
-  .event-name {
-    font-size: 11px;
-    font-weight: 600;
-    color: #374151;
-    max-width: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    letter-spacing: 0.2px;
-  }
-
-  .event-date {
-    font-size: 10px;
-    color: #9ca3af;
-    margin-top: 2px;
-    font-weight: 500;
-  }
-
-  /* ---- Empty state ---- */
-
-  .empty-content {
-    gap: 4px;
-  }
-
-  .empty-icon {
-    color: var(--event-color);
-    margin-bottom: 4px;
-    opacity: 0.45;
-  }
-
-  .empty-text {
-    font-size: 12px;
-    font-weight: 600;
-    color: #6b7280;
-    letter-spacing: 0.1px;
-  }
-
-  .empty-hint {
-    font-size: 9.5px;
-    color: #a0aab5;
-    font-weight: 400;
-  }
-
-  /* ---- Context menu ---- */
-
   .ctx-backdrop {
     position: fixed;
     inset: 0;
@@ -350,9 +306,9 @@
     position: fixed;
     bottom: 8px;
     right: 8px;
-    background: #fafafc;
+    background: #fff;
     border: 1px solid rgba(0, 0, 0, 0.06);
-    border-radius: 14px;
+    border-radius: 12px;
     box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
     padding: 6px;
     z-index: 60;
@@ -373,14 +329,14 @@
     font-family: 'Inter', -apple-system, sans-serif;
     color: #374151;
     cursor: pointer;
-    border-radius: 9px;
+    border-radius: 8px;
     transition: background 0.15s;
     white-space: nowrap;
     text-align: left;
   }
 
   .ctx-item:hover {
-    background: rgba(0, 0, 0, 0.05);
+    background: rgba(0, 0, 0, 0.04);
   }
 
   .ctx-danger {
