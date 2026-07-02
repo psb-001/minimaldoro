@@ -6,7 +6,7 @@
   import WidgetView from './lib/components/WidgetView.svelte'
   import FirstRunModal from './lib/components/FirstRunModal.svelte'
   import AboutModal from './lib/components/AboutModal.svelte'
-  import { getEvents, addEvent, updateEvent, deleteEvent, celebrate, openWidget, getSetting, setSetting } from './lib/ipc.js'
+  import { getEvents, addEvent, updateEvent, deleteEvent, celebrate, openWidget, getSetting, setSetting, listWidgets } from './lib/ipc.js'
   import { ICONS } from './lib/icons.js'
   import { fly } from 'svelte/transition'
 
@@ -16,6 +16,7 @@
   let widgetEventIdSafe = isWidgetView && widgetEventId && !Number.isNaN(widgetEventId) ? widgetEventId : null
 
   let events = $state([])
+  let pinnedEventIds = $state(new Set())
   let currentTab = $state('all')
   let showModal = $state(false)
   let editingEvent = $state(null)
@@ -32,6 +33,15 @@
     } catch (e) {
       showToast('Failed to load events')
       events = []
+    }
+  }
+
+  async function loadPinned() {
+    try {
+      const widgets = await listWidgets()
+      pinnedEventIds = new Set(widgets.map(w => Number(w.event_id)).filter(id => !Number.isNaN(id)))
+    } catch {
+      pinnedEventIds = new Set()
     }
   }
 
@@ -97,8 +107,10 @@
   $effect(() => {
     checkFirstRun()
     loadEvents()
+    loadPinned()
     const unsubscribe = window.api?.onEventsUpdated(() => {
       loadEvents()
+      loadPinned()
     })
     return () => {
       if (unsubscribe) unsubscribe()
@@ -165,9 +177,12 @@
           <div transition:fly={{ y: 20, duration: 300 }}>
             <EventCard
               event={event}
+              pinned={pinnedEventIds.has(event.id)}
               ondeleted={() => (confirmDeleteId = event.id)}
               oncelebrated={() => handleCelebrate(event.id)}
-              onpin={() => { openWidget(event.id).catch(() => {}) }}
+              onpin={() => {
+                openWidget(event.id).catch(() => {}).then(() => loadPinned())
+              }}
               onedit={() => {
                 editingEvent = event
                 showModal = true

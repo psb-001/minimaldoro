@@ -1,7 +1,7 @@
 <script>
   import { ICONS } from '../icons.js'
 
-  let { event = {}, ondeleted = () => {}, oncelebrated = () => {}, onpin = () => {}, onedit = () => {} } = $props()
+  let { event = {}, pinned = false, ondeleted = () => {}, oncelebrated = () => {}, onpin = () => {}, onedit = () => {} } = $props()
 
   let now = $state(Date.now())
 
@@ -39,8 +39,8 @@
     </div>
 
     <div class="card-actions">
-      <button class="card-action-btn" aria-label="Pin to desktop" onclick={() => onpin()}>
-        {@html ICONS.pin}
+      <button class="card-action-btn" class:pin-active={pinned} aria-label="Pin to desktop" onclick={() => onpin()}>
+        {@html pinned ? ICONS.pinFilled : ICONS.pin}
       </button>
       <button class="card-action-btn" aria-label="Event options" onclick={handleContextMenu}>
         {@html ICONS.dots}
@@ -161,6 +161,10 @@
 
   .card-action-btn:first-child {
     color: #6b7280;
+  }
+
+  .card-action-btn:first-child.pin-active {
+    color: #fa520f;
   }
 
   .card-action-btn:first-child:hover {
