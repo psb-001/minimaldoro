@@ -88,21 +88,16 @@
 
   {#if nextEvent}
     <div class="accent"></div>
-    <div class="glow"></div>
     <div class="content">
       {#if daysLeft < 0}
-        <div class="count-row">
-          <span class="count-num passed">—</span>
-          <span class="count-label">passed</span>
-        </div>
+        <div class="passed-label">Event passed</div>
+        <div class="event-title">{nextEvent.title}</div>
       {:else}
-        <div class="count-row">
-          <span class="count-num">{daysLeft}</span>
-          <span class="count-label">{daysLeft === 1 ? 'day' : 'days'}</span>
-        </div>
+        <div class="count-num">{daysLeft}</div>
+        <div class="count-label">{daysLeft === 1 ? 'day' : 'days'}</div>
+        <div class="divider"></div>
+        <div class="event-title">{nextEvent.title}</div>
       {/if}
-      <div class="divider"></div>
-      <div class="event-title">{nextEvent.title}</div>
       <div class="event-date">{new Date(nextEvent.date + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</div>
     </div>
     <div class="resize-handle"></div>
@@ -192,21 +187,6 @@
     z-index: 3;
   }
 
-  .glow {
-    position: absolute;
-    left: 16px;
-    right: 16px;
-    top: 50%;
-    transform: translateY(-50%);
-    height: 56px;
-    background: var(--event-color);
-    opacity: 0.07;
-    border-radius: 50%;
-    filter: blur(18px);
-    pointer-events: none;
-    z-index: 0;
-  }
-
   .content {
     flex: 1;
     display: flex;
@@ -221,15 +201,6 @@
     min-height: 0;
   }
 
-  .count-row {
-    display: flex;
-    align-items: baseline;
-    justify-content: center;
-    gap: 4px;
-    line-height: 1;
-    margin-bottom: 2px;
-  }
-
   .count-num {
     font-family: 'Playfair Display', Georgia, serif;
     font-size: 44px;
@@ -237,10 +208,7 @@
     color: var(--event-color);
     letter-spacing: -2px;
     line-height: 1;
-  }
-
-  .count-num.passed {
-    color: #c7c7c7;
+    margin-bottom: 2px;
   }
 
   .count-label {
@@ -249,13 +217,14 @@
     color: #6b7280;
     letter-spacing: 0.3px;
     text-transform: lowercase;
+    margin-bottom: 8px;
   }
 
   .divider {
     width: 20px;
     height: 1px;
     background: rgba(0, 0, 0, 0.08);
-    margin: 6px 0 6px;
+    margin: 0 0 8px;
     border-radius: 1px;
   }
 
@@ -276,6 +245,15 @@
     color: #9ca3af;
     font-weight: 500;
     letter-spacing: 0.3px;
+  }
+
+  .passed-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #9ca3af;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
   }
 
   .empty-state {

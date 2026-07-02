@@ -434,9 +434,13 @@ if (!gotTheLock) {
       console.error('Failed to create tray:', e)
     }
 
-    // Apply auto-start setting on startup
-    const autoStart = getSetting('autoStart') === 'true'
-    if (autoStart) {
+    // Apply auto-start setting on startup; enable by default so widgets restore on boot
+    let autoStart = getSetting('autoStart')
+    if (autoStart === null || autoStart === undefined) {
+      autoStart = 'true'
+      setSetting('autoStart', 'true')
+    }
+    if (autoStart === 'true') {
       app.setLoginItemSettings({ openAtLogin: true, openAsHidden: true })
       isAutoStarting = true
     }
@@ -446,6 +450,13 @@ if (!gotTheLock) {
     createWindow()
     restoreWidgets(isAutoStarting)
     startNotificationScheduler()
+
+    if (isAutoStarting) {
+      mainWindow.hide()
+      setTimeout(() => {
+        isAutoStarting = false
+      }, 2000)
+    }
   })
 
   process.on('uncaughtException', (err) => {
