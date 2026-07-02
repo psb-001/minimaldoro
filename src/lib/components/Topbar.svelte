@@ -2,7 +2,7 @@
   import { ICONS } from '../icons.js'
   import { minimizeWindow, closeWindow } from '../ipc.js'
 
-  let { onadd = () => {}, oninfo = () => {} } = $props()
+  let { onadd = () => {} } = $props()
 </script>
 
 <div class="topbar">
@@ -12,9 +12,6 @@
   </button>
 
   <div class="topbar-actions">
-    <button class="btn-icon" aria-label="About" onclick={oninfo}>
-      {@html ICONS.dots}
-    </button>
     <button class="btn-icon" aria-label="Minimize" onclick={() => minimizeWindow()}>
       {@html ICONS.minus}
     </button>

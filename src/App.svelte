@@ -23,6 +23,7 @@
   let toastMessage = $state('')
   let toastTimer = $state(null)
   let showAbout = $state(false)
+  let aboutTab = $state('about')
   let firstRunComplete = $state(false)
 
   async function loadEvents() {
@@ -110,6 +111,11 @@
     toastTimer = setTimeout(() => { toastMessage = '' }, 4000)
   }
 
+  function openAbout(tab = 'about') {
+    aboutTab = tab
+    showAbout = true
+  }
+
   function handleConfirmKeydown(e) {
     if (e.key === 'Escape') {
       confirmDeleteId = null
@@ -140,7 +146,7 @@
 {/if}
 
 {#if showAbout}
-  <AboutModal onclose={() => (showAbout = false)} />
+  <AboutModal tab={aboutTab} onclose={() => (showAbout = false)} />
 {/if}
 
 {#if isWidgetView}
@@ -149,7 +155,6 @@
   <div class="shell">
     <Topbar
       onadd={() => (showModal = true)}
-      oninfo={() => (showAbout = true)}
     />
 
     <Tabs {currentTab} ontab={(tab) => (currentTab = tab)} />
@@ -176,6 +181,14 @@
           </div>
         {/each}
       </div>
+    </div>
+
+    <div class="shell-footer">
+      <button class="footer-link" onclick={() => openAbout('about')}>About</button>
+      <span class="footer-sep">·</span>
+      <button class="footer-link" onclick={() => openAbout('privacy')}>Privacy Policy</button>
+      <span class="footer-sep">·</span>
+      <button class="footer-link" onclick={() => openAbout('terms')}>Terms & Conditions</button>
     </div>
   </div>
 {/if}
@@ -379,5 +392,37 @@
   @keyframes toast-in {
     from { opacity: 0; transform: translateX(-50%) translateY(10px); }
     to { opacity: 1; transform: translateX(-50%) translateY(0); }
+  }
+
+  .shell-footer {
+    padding: 10px 28px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    -webkit-app-region: no-drag;
+    border-top: 1px solid rgba(0,0,0,0.04);
+  }
+
+  .footer-link {
+    background: transparent;
+    border: none;
+    padding: 0;
+    font-size: 11px;
+    font-weight: 500;
+    color: #a0aab5;
+    cursor: pointer;
+    font-family: 'Inter', -apple-system, sans-serif;
+    transition: color 0.2s;
+  }
+
+  .footer-link:hover {
+    color: #fa520f;
+  }
+
+  .footer-sep {
+    font-size: 11px;
+    color: #d1d5db;
+    user-select: none;
   }
 </style>

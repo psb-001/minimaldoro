@@ -3,6 +3,11 @@
 
   let { onclose = () => {} } = $props()
   let activeTab = $state('about')
+  export let tab = 'about'
+
+  $effect(() => {
+    if (tab) activeTab = tab
+  })
 
   const tabs = [
     { id: 'about', label: 'About' },
