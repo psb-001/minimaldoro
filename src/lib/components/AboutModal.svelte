@@ -1,9 +1,8 @@
 <script>
   import { ICONS } from '../icons.js'
 
-  let { onclose = () => {} } = $props()
+  let { onclose = () => {}, tab = 'about' } = $props()
   let activeTab = $state('about')
-  export let tab = 'about'
 
   $effect(() => {
     if (tab) activeTab = tab
