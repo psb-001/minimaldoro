@@ -206,6 +206,11 @@ function setupAutoUpdater() {
 
   autoUpdater.autoDownload = true
   autoUpdater.autoInstallOnAppQuit = true
+  autoUpdater.setFeedURL({
+    provider: 'github',
+    owner: 'psb-001',
+    repo: 'minimaldoro',
+  })
 
   autoUpdater.on('update-available', (info) => {
     console.log('Update available:', info.version)
