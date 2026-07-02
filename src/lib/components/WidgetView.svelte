@@ -244,10 +244,11 @@
     align-items: center;
     justify-content: center;
     text-align: center;
-    padding: 18px 16px 16px;
+    padding: 16px 14px 14px;
     position: relative;
     z-index: 2;
     gap: 0;
+    min-height: 0;
   }
 
   /* ---- Event state ---- */
@@ -261,40 +262,40 @@
 
   .count-num {
     font-family: 'Playfair Display', Georgia, serif;
-    font-size: 48px;
+    font-size: 40px;
     font-weight: 600;
     color: var(--event-color);
-    letter-spacing: -2.5px;
+    letter-spacing: -2px;
     line-height: 1;
   }
 
   .count-unit {
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 600;
     color: #6b7280;
     letter-spacing: 0.3px;
   }
 
   .count-sub {
-    font-size: 10px;
+    font-size: 9.5px;
     font-weight: 600;
     color: #9ca3af;
     letter-spacing: 1px;
     text-transform: uppercase;
-    margin-top: 3px;
-    margin-bottom: 10px;
+    margin-top: 2px;
+    margin-bottom: 8px;
   }
 
   .divider {
-    width: 28px;
+    width: 24px;
     height: 1.5px;
     background: rgba(0, 0, 0, 0.08);
-    margin-bottom: 9px;
+    margin-bottom: 8px;
     border-radius: 1px;
   }
 
   .event-name {
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 600;
     color: #374151;
     max-width: 100%;
@@ -307,7 +308,7 @@
   .event-date {
     font-size: 10px;
     color: #9ca3af;
-    margin-top: 3px;
+    margin-top: 2px;
     font-weight: 500;
   }
 
