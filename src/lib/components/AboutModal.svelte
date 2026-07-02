@@ -57,6 +57,7 @@
             <div class="credit-name">psb-001</div>
             <a class="credit-link" href="https://github.com/psb-001" target="_blank" rel="noopener noreferrer">github.com/psb-001</a>
             <a class="credit-link" href="https://github.com/psb-001/minimaldoro" target="_blank" rel="noopener noreferrer">github.com/psb-001/minimaldoro</a>
+            <a class="credit-link" href="https://github.com/psb-001/minimaldoro/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">MIT License</a>
           </div>
         </div>
       {/if}

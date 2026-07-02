@@ -1,22 +1,31 @@
 {
   "name": "minimaldoro",
   "version": "0.1.0",
-  "description": "Elegant countdown timer and event tracker for desktop",
-  "author": "Minimaldoro Team",
+  "description": "Elegant countdown timer and event tracker for your desktop. Track upcoming events, celebrate milestones, and stay on top of what matters — all from your menubar.",
+  "author": "psb-001 <psb001@users.noreply.github.com>",
   "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/psb-001/minimaldoro.git"
+  },
+  "homepage": "https://github.com/psb-001/minimaldoro#readme",
+  "bugs": {
+    "url": "https://github.com/psb-001/minimaldoro/issues"
+  },
+  "license": "MIT",
   "scripts": {
     "dev:vite": "vite",
     "dev:electron": "wait-on http://localhost:5173 && cross-env VITE_DEV=true electron .",
     "dev": "concurrently --kill-others \"npm run dev:vite\" \"npm run dev:electron\"",
     "build": "vite build",
-    "build:app": "vite build && electron-builder",
+    "build:app": "vite build && electron-builder --win",
     "postinstall": "electron-rebuild -f -w better-sqlite3"
   },
   "build": {
     "appId": "com.minimaldoro.app",
     "productName": "Minimaldoro",
     "icon": "assets/icon.png",
-    "copyright": "Copyright © 2025 Minimaldoro Team. All rights reserved.",
+    "copyright": "Copyright © 2025 psb-001. All rights reserved.",
     "directories": {
       "output": "release",
       "buildResources": "build"
@@ -55,7 +64,7 @@
     "publish": [
       {
         "provider": "github",
-        "owner": "minimaldoro",
+        "owner": "psb-001",
         "repo": "minimaldoro"
       }
     ]
