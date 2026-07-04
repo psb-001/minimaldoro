@@ -843,20 +843,21 @@
       .nav-links { display: none; }
       .hamburger { display: flex; }
       .hero { padding-top: 100px; }
-      .hero::before { width: 400px; height: 400px; }
+      .hero::before { width: 100%; max-width: 500px; height: 400px; left: 50%; transform: translateX(-50%); }
       .how-steps { grid-template-columns: 1fr; gap: 8px; }
       .req-grid { grid-template-columns: 1fr; }
       .mockup-body { flex-direction: column; align-items: center; padding: 20px 16px; }
       .mockup-app-card { width: 100%; max-width: 320px; }
       .mockup-widget { width: 100%; max-width: 160px; }
       .footer-top { flex-direction: column; }
-      .cta-section::before { width: 300px; height: 200px; }
+      .cta-section::before { width: 100%; max-width: 400px; height: 200px; left: 50%; transform: translateX(-50%); }
       .section-title { font-size: clamp(24px, 5vw, 40px); }
     }
 
     @media (max-width: 480px) {
       .hero h1 { font-size: 36px; letter-spacing: -1px; }
       .hero-sub { font-size: 15px; }
+      .hero::before { width: 100%; max-width: 280px; height: 280px; }
       .mockup-app-card { width: 100%; max-width: 280px; }
       .mockup-event-name { font-size: 12px; }
       .mockup-event-date { font-size: 10px; }
@@ -864,6 +865,7 @@
       .mockup-widget-countdown { font-size: 32px; }
       .req-card { padding: 16px; }
       .btn { padding: 10px 18px; font-size: 13px; }
+      .cta-section::before { width: 100%; max-width: 250px; height: 150px; }
     }
 
     /* ─── Reduced Motion ─── */
@@ -1273,6 +1275,23 @@
           const item = btn.parentElement;
           const isOpen = item.classList.toggle('open');
           btn.setAttribute('aria-expanded', String(isOpen));
+        }
+      });
+    });
+
+    // Track download and GitHub clicks with GoatCounter
+    document.querySelectorAll('a[href*="releases/download"]').forEach(link => {
+      link.addEventListener('click', () => {
+        if (window.goatcounter) {
+          window.goatcounter.count({path: '/download', title: 'Download'});
+        }
+      });
+    });
+
+    document.querySelectorAll('a[href*="github.com/psb-001/minimaldoro"]').forEach(link => {
+      link.addEventListener('click', () => {
+        if (window.goatcounter) {
+          window.goatcounter.count({path: '/github', title: 'GitHub Visit'});
         }
       });
     });
