@@ -28,7 +28,7 @@
     "copyright": "Copyright © 2025 psb-001. All rights reserved.",
     "directories": {
       "output": "release",
-      "buildResources": "build"
+      "buildResources": "assets"
     },
     "compression": "maximum",
     "asar": true,
