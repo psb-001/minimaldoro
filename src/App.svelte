@@ -6,7 +6,7 @@
   import WidgetView from './lib/components/WidgetView.svelte'
   import FirstRunModal from './lib/components/FirstRunModal.svelte'
   import AboutModal from './lib/components/AboutModal.svelte'
-  import { getEvents, addEvent, updateEvent, deleteEvent, celebrate, openWidget, getSetting, setSetting, listWidgets } from './lib/ipc.js'
+  import { getEvents, addEvent, updateEvent, deleteEvent, celebrate, openWidget, closeWidget, getSetting, setSetting, listWidgets } from './lib/ipc.js'
   import { ICONS } from './lib/icons.js'
   import { fly } from 'svelte/transition'
 
@@ -39,7 +39,7 @@
   async function loadPinned() {
     try {
       const widgets = await listWidgets()
-      pinnedEventIds = new Set(widgets.map(w => Number(w.event_id)).filter(id => !Number.isNaN(id)))
+      pinnedEventIds = new Set(widgets.map(Number).filter(id => !Number.isNaN(id)))
     } catch {
       pinnedEventIds = new Set()
     }
@@ -162,7 +162,7 @@
 {/if}
 
 {#if isWidgetView}
-   <WidgetView {events} pinnedEventId={widgetEventIdSafe} />
+   <WidgetView pinnedEventId={widgetEventIdSafe} />
 {:else if firstRunComplete}
   <div class="shell">
     <Topbar
@@ -181,7 +181,11 @@
               ondeleted={() => (confirmDeleteId = event.id)}
               oncelebrated={() => handleCelebrate(event.id)}
               onpin={() => {
-                openWidget(event.id).catch(() => {}).then(() => loadPinned())
+                if (pinnedEventIds.has(event.id)) {
+                  closeWidget(event.id).finally(() => loadPinned())
+                } else {
+                  openWidget(event.id).finally(() => loadPinned())
+                }
               }}
               onedit={() => {
                 editingEvent = event

@@ -2,7 +2,7 @@ const { app, BrowserWindow, ipcMain, Notification, Tray, Menu, screen, autoUpdat
 const path = require('path')
 const fs = require('fs')
 const { pathToFileURL } = require('url')
-const iconPath = path.join(__dirname, '..', 'assets', 'icon.png')
+const iconPath = path.join(__dirname, '..', 'assets', 'logo.ico')
 const { init, getAllEvents, addEvent, updateEvent, deleteEvent, markCelebrated, getWidgets, saveWidget, removeWidget, getEventById, cleanupOrphanedWidgets, getSetting, setSetting, closeDb } = require('./db')
 
 const isDev = process.env.VITE_DEV === 'true'
@@ -16,6 +16,7 @@ let isAutoStarting = false
 function createWindow() {
   if (mainWindow) {
     if (mainWindow.isMinimized()) mainWindow.restore()
+    if (!mainWindow.isVisible()) mainWindow.show()
     mainWindow.focus()
     return
   }
@@ -45,12 +46,10 @@ function createWindow() {
   })
 
   mainWindow.once('ready-to-show', () => {
-    console.log('Window ready-to-show')
     mainWindow.show()
   })
 
   mainWindow.once('show', () => {
-    console.log('Window shown')
     mainWindow.focus()
   })
 
@@ -60,7 +59,7 @@ function createWindow() {
 
   setTimeout(() => {
     if (mainWindow && !mainWindow.isDestroyed() && !mainWindow.isVisible()) {
-      console.log('Fallback: forcing window show after timeout')
+      // Fallback: force window show if it hasn't appeared yet
       mainWindow.show()
       mainWindow.focus()
     }
@@ -224,19 +223,16 @@ function setupAutoUpdater() {
   autoUpdater.autoInstallOnAppQuit = true
 
   autoUpdater.on('update-available', (info) => {
-    console.log('Update available:', info.version)
   })
 
   autoUpdater.on('update-not-available', (info) => {
-    console.log('Update not available:', info.version)
   })
 
   autoUpdater.on('download-progress', (progress) => {
-    console.log(`Downloading update: ${Math.round(progress.percent)}%`)
   })
 
   autoUpdater.on('update-downloaded', (info) => {
-    console.log('Update downloaded:', info.version)
+
     updateReady = true
     tray?.setContextMenu(buildTrayMenu())
     new Notification({
@@ -342,8 +338,8 @@ function registerIpcHandlers() {
   ipcMain.handle('widget:open', (event, eventId) => {
     const win = BrowserWindow.fromWebContents(event.sender)
     const [x, y] = win.getPosition()
-    saveWidget(eventId, x + 50, y + 50, 220, 130)
-    createWidgetWindow(eventId, x + 50, y + 50, 220, 130, { isBootRestore: false })
+    saveWidget(eventId, x + 50, y + 50, 240, 160)
+    createWidgetWindow(eventId, x + 50, y + 50, 240, 160, { isBootRestore: false })
   })
 
   ipcMain.handle('widget:close', (_, eventId) => {
@@ -437,7 +433,7 @@ if (!gotTheLock) {
   app.whenReady().then(() => {
     try {
       init()
-      console.log('DB initialized')
+
     } catch (e) {
       console.error('DB init failed:', e)
     }

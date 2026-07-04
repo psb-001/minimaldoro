@@ -75,7 +75,7 @@
             id="event-title"
             type="text"
             class="field-input"
-            placeholder="e.g. Sarah's birthday"
+            placeholder="e.g. PSB's birthday"
             bind:value={title}
           />
         </div>

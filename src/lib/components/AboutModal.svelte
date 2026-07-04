@@ -14,7 +14,7 @@
     { id: 'terms', label: 'Terms & Conditions' },
   ]
 
-  let appVersion = $state('0.1.0')
+  let appVersion = $state('1.0.0')
 
   $effect(() => {
     if (window.api?.getVersion) {

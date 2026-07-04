@@ -18,11 +18,25 @@
   let isUrgent = $derived(daysLeft >= 0 && daysLeft <= 3 && !event.celebrated)
   let isPassed = $derived(daysLeft < 0 && !event.celebrated)
   let showMenu = $state(false)
+  let menuRef = $state(null)
 
   function handleContextMenu(e) {
     e.stopPropagation()
     showMenu = !showMenu
   }
+
+  function handleClickOutside(e) {
+    if (showMenu && menuRef && !menuRef.contains(e.target)) {
+      showMenu = false
+    }
+  }
+
+  $effect(() => {
+    if (showMenu) {
+      document.addEventListener('click', handleClickOutside, true)
+      return () => document.removeEventListener('click', handleClickOutside, true)
+    }
+  })
 </script>
 
 <div
@@ -38,8 +52,8 @@
       <div class="card-label" title={event.title}>{event.title}</div>
     </div>
 
-    <div class="card-actions">
-      <button class="card-action-btn" class:pin-active={pinned} aria-label="Pin to desktop" onclick={() => onpin()}>
+    <div class="card-actions" bind:this={menuRef}>
+      <button class="card-action-btn" class:pin-active={pinned} aria-label={pinned ? 'Unpin from desktop' : 'Pin to desktop'} title={pinned ? 'Unpin from desktop' : 'Pin to desktop'} onclick={() => onpin()}>
         {@html pinned ? ICONS.pinFilled : ICONS.pin}
       </button>
       <button class="card-action-btn" aria-label="Event options" onclick={handleContextMenu}>

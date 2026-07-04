@@ -1,0 +1,1264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Minimaldoro — Count down to what matters</title>
+  <meta name="description" content="Minimaldoro is a lightweight Windows desktop app for tracking life events with beautiful countdown widgets, reminders, and a system tray presence." />
+  <meta property="og:title" content="Minimaldoro — Count down to what matters" />
+  <meta property="og:description" content="A beautiful desktop countdown for birthdays, anniversaries, deadlines, and every moment you're looking forward to." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://github.com/psb-001/minimaldoro" />
+  <meta property="og:image" content="./assets/logo.ico" />
+  <meta name="theme-color" content="#fa520f" />
+  <link rel="icon" href="./assets/logo.ico" type="image/x-icon" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --orange: #fa520f;
+      --orange-dark: #cc3a05;
+      --orange-glow: rgba(250, 82, 15, 0.4);
+      --yellow: #ffb83e;
+      --cream: #fff8e0;
+      --bg: #ffffff;
+      --bg-elevated: #f9f9f9;
+      --surface: #f4f4f4;
+      --surface-border: rgba(0, 0, 0, 0.08);
+      --text: #111111;
+      --text-secondary: #555;
+      --text-muted: #999;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .container {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ─── Header ─── */
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--surface-border);
+    }
+
+    .header-inner {
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+      font-size: 16px;
+      letter-spacing: -0.3px;
+    }
+
+    .brand-mark {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      box-shadow: 0 2px 12px var(--orange-glow);
+      object-fit: cover;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-secondary);
+    }
+
+    .nav-links a:hover { color: var(--text); }
+
+    .nav-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      border-radius: 8px;
+      background: var(--orange);
+      color: #fff;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .nav-cta:hover {
+      background: #ff6a20;
+      box-shadow: 0 2px 16px var(--orange-glow);
+    }
+
+    /* Hamburger */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+    }
+
+    .hamburger span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: var(--text);
+      border-radius: 2px;
+      transition: all 0.3s;
+    }
+
+    .hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+    .hamburger.active span:nth-child(2) { opacity: 0; }
+    .hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+
+    .mobile-nav {
+      display: none;
+      position: fixed;
+      top: 64px;
+      left: 0;
+      right: 0;
+      background: rgba(255, 255, 255, 0.97);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--surface-border);
+      padding: 16px 24px;
+      z-index: 99;
+    }
+
+    .mobile-nav.open { display: flex; flex-direction: column; gap: 12px; }
+
+    .mobile-nav a {
+      display: block;
+      padding: 10px 0;
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      border-bottom: 1px solid var(--surface-border);
+    }
+
+    .mobile-nav a:last-child { border-bottom: none; }
+    .mobile-nav a:hover { color: var(--orange); }
+
+    /* ─── Hero ─── */
+    .hero {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 80px 24px 60px;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -200px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 800px;
+      height: 800px;
+      background: radial-gradient(circle, rgba(250, 82, 15, 0.05) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      background: rgba(250, 82, 15, 0.1);
+      border: 1px solid rgba(250, 82, 15, 0.2);
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--orange);
+      margin-bottom: 32px;
+      letter-spacing: 0.3px;
+    }
+
+    .hero h1 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(48px, 8vw, 80px);
+      font-weight: 600;
+      letter-spacing: -2px;
+      line-height: 1.0;
+      margin-bottom: 24px;
+      max-width: 700px;
+    }
+
+    .hero h1 .accent {
+      font-style: italic;
+      color: var(--orange);
+    }
+
+    .hero-sub {
+      font-size: 17px;
+      color: var(--text-secondary);
+      max-width: 480px;
+      margin: 0 auto 40px;
+      line-height: 1.6;
+      font-weight: 400;
+    }
+
+    .hero-actions {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      border: none;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .btn svg { width: 16px; height: 16px; }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--orange) 0%, #ff7b00 100%);
+      color: #fff;
+      box-shadow: 0 4px 20px var(--orange-glow);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(250, 82, 15, 0.5);
+    }
+
+    .btn-ghost {
+      background: rgba(0, 0, 0, 0.04);
+      color: var(--text-secondary);
+      border: 1px solid var(--surface-border);
+    }
+
+    .btn-ghost:hover {
+      background: rgba(0, 0, 0, 0.07);
+      color: var(--text);
+      border-color: rgba(0, 0, 0, 0.15);
+    }
+
+    .hero-note {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* ─── Product Mockup ─── */
+    .mockup-section {
+      padding: 40px 0 100px;
+    }    .mockup-window {
+      max-width: min(900px, 100%);
+      margin: 0 auto;
+      background: #1a1a1a;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 32px 80px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.05);
+    }
+
+    .mockup-titlebar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 16px;
+      background: #2a2a2a;
+    }
+
+    .mockup-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #555;
+    }
+
+    .mockup-dot:first-child { background: #ff5f57; }
+    .mockup-dot:nth-child(2) { background: #febc2e; }
+    .mockup-dot:nth-child(3) { background: #28c840; }
+
+    .mockup-titlebar-text {
+      margin-left: 12px;
+      font-size: 12px;
+      color: #888;
+      font-weight: 500;
+    }
+
+    .mockup-body {
+      padding: 32px;
+      display: flex;
+      gap: 24px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .mockup-app-card {
+      width: 320px;
+      background: #fff;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    }
+
+    .mockup-app-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .mockup-app-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .mockup-app-badge {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--orange);
+      background: rgba(250, 82, 15, 0.1);
+      padding: 2px 8px;
+      border-radius: 999px;
+    }
+
+    .mockup-event {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .mockup-event:last-child { border-bottom: none; }
+
+    .mockup-event-color {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .mockup-event-info {
+      flex: 1;
+    }
+
+    .mockup-event-name {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    .mockup-event-date {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .mockup-event-countdown {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--orange);
+    }
+
+    .mockup-widget {
+      width: 160px;
+      background: #fff;
+      border-radius: 14px;
+      padding: 20px 16px;
+      text-align: center;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .mockup-widget::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 3px;
+      height: 100%;
+      background: var(--orange);
+    }
+
+    .mockup-widget-countdown {
+      font-size: 40px;
+      font-weight: 700;
+      color: var(--orange);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .mockup-widget-label {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+    }
+
+    .mockup-widget-title {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .mockup-widget-date {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    /* ─── How It Works ─── */
+    .how-section {
+      padding: 100px 0;
+      border-top: 1px solid var(--surface-border);
+      background: var(--bg-elevated);
+    }
+
+    .how-steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+      margin-top: 56px;
+    }
+
+    .how-step {
+      text-align: center;
+      padding: 32px 20px;
+    }
+
+    .how-step-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--orange) 0%, #ff7b00 100%);
+      color: #fff;
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 16px var(--orange-glow);
+    }
+
+    .how-step-title {
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    .how-step-text {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 56px;
+    }
+
+    .section-eyebrow {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--orange);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(28px, 4vw, 40px);
+      font-weight: 600;
+      letter-spacing: -1px;
+      line-height: 1.1;
+    }
+
+    /* ─── Tech Stack ─── */
+    .tech-section {
+      padding: 80px 0;
+      border-top: 1px solid var(--surface-border);
+      background: var(--bg-elevated);
+    }
+
+    .tech-badges {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 40px;
+    }
+
+    .tech-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 18px;
+      background: #fff;
+      border: 1px solid var(--surface-border);
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      transition: all 0.2s;
+    }
+
+    .tech-badge:hover {
+      border-color: rgba(0, 0, 0, 0.15);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    }
+
+    .tech-badge svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    /* ─── System Requirements ─── */
+    .requirements {
+      padding: 100px 0;
+      border-top: 1px solid var(--surface-border);
+    }
+
+    .req-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-top: 48px;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .req-card {
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
+      border-radius: 12px;
+      padding: 24px;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+
+    .req-card-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: rgba(250, 82, 15, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .req-card-icon svg {
+      width: 18px;
+      height: 18px;
+      stroke: var(--orange);
+      stroke-width: 1.5;
+      fill: none;
+    }
+
+    .req-card-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 2px;
+    }
+
+    .req-card-text {
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    /* ─── FAQ ─── */
+    .faq {
+      padding: 100px 0;
+      border-top: 1px solid var(--surface-border);
+      background: var(--bg-elevated);
+    }
+
+    .faq-list {
+      max-width: 640px;
+      margin: 48px auto 0;
+    }
+
+    .faq-item {
+      border-bottom: 1px solid var(--surface-border);
+    }
+
+    .faq-question {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 0;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+      background: none;
+      border: none;
+      width: 100%;
+      text-align: left;
+      font-family: inherit;
+      touch-action: manipulation;
+    }
+
+    .faq-question:hover { color: var(--orange); }
+
+    .faq-chevron {
+      width: 20px;
+      height: 20px;
+      stroke: var(--text-muted);
+      stroke-width: 2;
+      fill: none;
+      transition: transform 0.3s;
+      flex-shrink: 0;
+      margin-left: 12px;
+    }
+
+    .faq-item.open .faq-chevron { transform: rotate(180deg); }
+
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.35s ease, padding 0.35s ease;
+    }
+
+    .faq-item.open .faq-answer {
+      max-height: 200px;
+      padding-bottom: 20px;
+    }
+
+    .faq-answer p {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.65;
+    }
+
+    /* ─── CTA Section ─── */
+    .cta-section {
+      padding: 100px 0;
+      text-align: center;
+      border-top: 1px solid var(--surface-border);
+      position: relative;
+    }
+
+    .cta-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(250, 82, 15, 0.04) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .cta-section h2 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(32px, 5vw, 48px);
+      font-weight: 600;
+      letter-spacing: -1.5px;
+      line-height: 1.1;
+      margin-bottom: 16px;
+    }
+
+    .cta-section p {
+      color: var(--text-secondary);
+      font-size: 16px;
+      margin-bottom: 32px;
+      max-width: 440px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .cta-actions {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    /* ─── Footer ─── */
+    .footer {
+      padding: 48px 0;
+      border-top: 1px solid var(--surface-border);
+    }
+
+    .footer-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 40px;
+      margin-bottom: 40px;
+      flex-wrap: wrap;
+    }
+
+    .footer-brand {
+      max-width: 300px;
+    }
+
+    .footer-brand-name {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .footer-brand-name img {
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+    }
+
+    .footer-brand-text {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    .footer-col-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+    }
+
+    .footer-col-links {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .footer-col-links a {
+      font-size: 13px;
+      color: var(--text-secondary);
+      transition: color 0.2s;
+    }
+
+    .footer-col-links a:hover { color: var(--orange); }
+
+    .footer-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 24px;
+      border-top: 1px solid var(--surface-border);
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .footer-copy {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .footer-copy .heart {
+      color: var(--orange);
+      display: inline-block;
+      animation: heartbeat 1.5s ease-in-out infinite;
+    }
+
+    @keyframes heartbeat {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.15); }
+    }
+
+    .footer-social {
+      display: flex;
+      gap: 16px;
+    }
+
+    .footer-social a {
+      color: var(--text-muted);
+      transition: color 0.2s;
+    }
+
+    .footer-social a:hover { color: var(--orange); }
+
+    .footer-social svg {
+      width: 18px;
+      height: 18px;
+      fill: currentColor;
+    }
+
+    /* ─── Responsive ─── */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+      .hero { padding-top: 100px; }
+      .how-steps { grid-template-columns: 1fr; gap: 8px; }
+      .req-grid { grid-template-columns: 1fr; }
+      .mockup-body { flex-direction: column; align-items: center; }
+      .mockup-app-card { width: 100%; max-width: 320px; }
+      .footer-top { flex-direction: column; }
+    }
+
+    @media (max-width: 480px) {
+      .hero h1 { font-size: 40px; letter-spacing: -1px; }
+      .hero-sub { font-size: 15px; }
+      .mockup-app-card { width: 100%; }
+    }
+
+    /* ─── Reduced Motion ─── */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="header-inner">
+      <a class="brand" href="#">
+        <img class="brand-mark" src="./assets/logo.ico" alt="Minimaldoro logo" width="32" height="32" />
+        <span>Minimaldoro</span>
+      </a>
+      <nav class="nav-links">
+        <a href="#how">How it works</a>
+        <a href="#requirements">Requirements</a>
+        <a href="#faq">FAQ</a>
+        <a href="https://github.com/psb-001/minimaldoro" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a class="nav-cta" href="https://github.com/psb-001/minimaldoro/releases" target="_blank" rel="noopener noreferrer">
+          Download v1.0
+        </a>
+      </nav>
+      <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </header>
+
+  <nav class="mobile-nav" id="mobileNav">
+    <a href="#how">How it works</a>
+    <a href="#requirements">Requirements</a>
+    <a href="#faq">FAQ</a>
+    <a href="https://github.com/psb-001/minimaldoro" target="_blank" rel="noopener noreferrer">GitHub</a>
+    <a href="https://github.com/psb-001/minimaldoro/releases" target="_blank" rel="noopener noreferrer" style="color: var(--orange); font-weight: 600;">Download v1.0</a>
+  </nav>
+
+  <section class="hero">
+    <div class="container">
+      <div class="hero-badge">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Free &amp; Open Source
+      </div>
+
+      <h1>Every day counts<br>down to <span class="accent">something</span></h1>
+
+      <p class="hero-sub">A beautiful desktop countdown for birthdays, anniversaries, deadlines, and every moment you're looking forward to. Pin widgets to your desktop and never lose track.</p>
+
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="https://github.com/psb-001/minimaldoro/releases" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download for Windows
+        </a>
+        <a class="btn btn-ghost" href="https://github.com/psb-001/minimaldoro" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+          View source
+        </a>
+      </div>
+      <p class="hero-note">Free &middot; Open source &middot; MIT License</p>
+    </div>
+  </section>
+
+  <!-- Product Mockup -->
+  <section class="mockup-section">
+    <div class="container">
+      <div class="mockup-window">
+        <div class="mockup-titlebar">
+          <div class="mockup-dot"></div>
+          <div class="mockup-dot"></div>
+          <div class="mockup-dot"></div>
+          <span class="mockup-titlebar-text">Minimaldoro</span>
+        </div>
+        <div class="mockup-body">
+          <div class="mockup-app-card">
+            <div class="mockup-app-header">
+              <span class="mockup-app-title">Events</span>
+              <span class="mockup-app-badge">3 upcoming</span>
+            </div>
+            <div class="mockup-event">
+              <div class="mockup-event-color" style="background: #fa520f;"></div>
+              <div class="mockup-event-info">
+                <div class="mockup-event-name">PSB's Birthday</div>
+                <div class="mockup-event-date">Aug 15, 2026</div>
+              </div>
+              <div class="mockup-event-countdown">42d</div>
+            </div>
+            <div class="mockup-event">
+              <div class="mockup-event-color" style="background: #3b82f6;"></div>
+              <div class="mockup-event-info">
+                <div class="mockup-event-name">Project Deadline</div>
+                <div class="mockup-event-date">Jul 31, 2026</div>
+              </div>
+              <div class="mockup-event-countdown">27d</div>
+            </div>
+            <div class="mockup-event">
+              <div class="mockup-event-color" style="background: #10b981;"></div>
+              <div class="mockup-event-info">
+                <div class="mockup-event-name">Vacation</div>
+                <div class="mockup-event-date">Dec 20, 2026</div>
+              </div>
+              <div class="mockup-event-countdown">169d</div>
+            </div>
+          </div>
+          <div class="mockup-widget">
+            <div class="mockup-widget-countdown">42</div>
+            <div class="mockup-widget-label">days left</div>
+            <div class="mockup-widget-title">PSB's Birthday</div>
+            <div class="mockup-widget-date">Aug 15, 2026</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section class="how-section" id="how">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-eyebrow">How it works</div>
+        <div class="section-title">Three steps to never<br>forget what matters</div>
+      </div>
+      <div class="how-steps">
+        <div class="how-step">
+          <div class="how-step-number">1</div>
+          <div class="how-step-title">Add your events</div>
+          <div class="how-step-text">Create countdowns for birthdays, deadlines, anniversaries — anything you want to track. Set colors and reminders.</div>
+        </div>
+        <div class="how-step">
+          <div class="how-step-number">2</div>
+          <div class="how-step-title">Pin to desktop</div>
+          <div class="how-step-text">Click the pin icon on any event to create a beautiful always-on-top widget right on your desktop.</div>
+        </div>
+        <div class="how-step">
+          <div class="how-step-number">3</div>
+          <div class="how-step-title">Never miss out</div>
+          <div class="how-step-text">Get native Windows notifications before events. Widgets persist across reboots — they're there when you need them.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tech Stack -->
+  <section class="tech-section">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-eyebrow">Built with</div>
+        <div class="section-title">Modern stack,<br>lightweight footprint</div>
+      </div>
+      <div class="tech-badges">
+        <div class="tech-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#ff3e00" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 12l2 2 4-4"/></svg>
+          Svelte 5
+        </div>
+        <div class="tech-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#646cff" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+          Electron 33
+        </div>
+        <div class="tech-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+          Vite 6
+        </div>
+        <div class="tech-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#4f46e5" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+          SQLite
+        </div>
+        <div class="tech-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          MIT License
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- System Requirements -->
+  <section class="requirements" id="requirements">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-eyebrow">Requirements</div>
+        <div class="section-title">What you need<br>to run Minimaldoro</div>
+      </div>
+      <div class="req-grid">
+        <div class="req-card">
+          <div class="req-card-icon">
+            <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          </div>
+          <div>
+            <div class="req-card-title">Windows 10 / 11</div>
+            <div class="req-card-text">64-bit Windows 10 (build 1903+) or Windows 11</div>
+          </div>
+        </div>
+        <div class="req-card">
+          <div class="req-card-icon">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l3 3"/></svg>
+          </div>
+          <div>
+            <div class="req-card-title">~80 MB disk space</div>
+            <div class="req-card-text">Lightweight installer, minimal storage needed</div>
+          </div>
+        </div>
+        <div class="req-card">
+          <div class="req-card-icon">
+            <svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          </div>
+          <div>
+            <div class="req-card-title">No dependencies</div>
+            <div class="req-card-text">Just download and install — no Node.js or runtime needed</div>
+          </div>
+        </div>
+        <div class="req-card">
+          <div class="req-card-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <div>
+            <div class="req-card-title">100% offline</div>
+            <div class="req-card-text">Works without internet. No account or cloud sync required</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="faq" id="faq">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-eyebrow">FAQ</div>
+        <div class="section-title">Questions? Answered.</div>
+      </div>
+      <div class="faq-list">
+        <div class="faq-item">
+          <button class="faq-question" aria-expanded="false">
+            Is Minimaldoro free?
+            <svg class="faq-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="faq-answer">
+            <p>Yes, 100% free and open source under the MIT License. No hidden costs, no premium tier, no data selling.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question" aria-expanded="false">
+            Does it work on Mac or Linux?
+            <svg class="faq-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="faq-answer">
+            <p>Currently Windows only. macOS and Linux support is on the roadmap. The tech stack (Electron + Svelte) is cross-platform, so future ports are straightforward.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question" aria-expanded="false">
+            Is my data safe?
+            <svg class="faq-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="faq-answer">
+            <p>Absolutely. All your data is stored locally in a SQLite database on your machine. Nothing is sent to any server — no telemetry, no analytics, no cloud sync.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question" aria-expanded="false">
+            How do widgets work?
+            <svg class="faq-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="faq-answer">
+            <p>Click the pin icon on any event to create a desktop widget. Widgets are always-on-top, resizable, and persist across app restarts. Right-click a widget to unpin it.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question" aria-expanded="false">
+            How do I get notified before events?
+            <svg class="faq-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="faq-answer">
+            <p>When creating or editing an event, set a reminder (2 hours, 3 hours, 6 hours, or 1 day before). Minimaldoro will send a native Windows notification at the right time.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question" aria-expanded="false">
+            How do I update to the latest version?
+            <svg class="faq-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="faq-answer">
+            <p>Minimaldoro checks for updates automatically on launch. When an update is available, it downloads in the background and notifies you to restart from the tray menu.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question" aria-expanded="false">
+            Can I contribute or report bugs?
+            <svg class="faq-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="faq-answer">
+            <p>Of course! The project is open source on GitHub. Fork it, create a feature branch, and open a Pull Request. Bug reports and feature requests are welcome via GitHub Issues.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section" id="download">
+    <div class="container">
+      <h2>Start counting down</h2>
+      <p>Download Minimaldoro v1.0.0, add your first event, and pin a widget to your desktop. That's it.</p>
+      <div class="cta-actions">
+        <a class="btn btn-primary" href="https://github.com/psb-001/minimaldoro/releases" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download for Windows
+        </a>
+        <a class="btn btn-ghost" href="https://github.com/psb-001/minimaldoro" target="_blank" rel="noopener noreferrer">
+          View on GitHub
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <div class="footer-brand-name">
+            <img src="./assets/logo.ico" alt="Minimaldoro" width="24" height="24" />
+            Minimaldoro
+          </div>
+          <p class="footer-brand-text">A lightweight desktop countdown timer for Windows. Track events, pin widgets, and never miss what matters.</p>
+        </div>
+        <div>
+          <div class="footer-col-title">Product</div>
+          <div class="footer-col-links">
+            <a href="#how">How it works</a>
+            <a href="#requirements">Requirements</a>
+            <a href="#faq">FAQ</a>
+          </div>
+        </div>
+        <div>
+          <div class="footer-col-title">Download</div>
+          <div class="footer-col-links">
+            <a href="https://github.com/psb-001/minimaldoro/releases" target="_blank" rel="noopener noreferrer">Latest release</a>
+            <a href="https://github.com/psb-001/minimaldoro/releases" target="_blank" rel="noopener noreferrer">Changelog</a>
+          </div>
+        </div>
+        <div>
+          <div class="footer-col-title">Open Source</div>
+          <div class="footer-col-links">
+            <a href="https://github.com/psb-001/minimaldoro" target="_blank" rel="noopener noreferrer">GitHub</a>
+            <a href="https://github.com/psb-001/minimaldoro/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener noreferrer">Contributing</a>
+            <a href="https://github.com/psb-001/minimaldoro/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">MIT License</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p class="footer-copy">&copy; 2026 Minimaldoro. Made with <span class="heart">♥</span> by <a href="https://github.com/psb-001" target="_blank" rel="noopener noreferrer">@psb-001</a></p>
+        <div class="footer-social">
+          <a href="https://github.com/psb-001/minimaldoro" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+            <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Mobile hamburger
+    const hamburger = document.getElementById('hamburger');
+    const mobileNav = document.getElementById('mobileNav');
+
+    hamburger.addEventListener('click', () => {
+      hamburger.classList.toggle('active');
+      mobileNav.classList.toggle('open');
+    });
+
+    // Close mobile nav on link click
+    mobileNav.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        hamburger.classList.remove('active');
+        mobileNav.classList.remove('open');
+      });
+    });
+
+    // Close mobile nav on scroll
+    window.addEventListener('scroll', () => {
+      if (mobileNav.classList.contains('open')) {
+        hamburger.classList.remove('active');
+        mobileNav.classList.remove('open');
+      }
+    });
+
+    // FAQ accordion — delegated click handler with aria-expanded
+    document.querySelector('.faq-list').addEventListener('click', (e) => {
+      const btn = e.target.closest('.faq-question');
+      if (btn) {
+        const item = btn.parentElement;
+        const isOpen = item.classList.toggle('open');
+        btn.setAttribute('aria-expanded', String(isOpen));
+      }
+    });
+
+    // Keyboard support for FAQ
+    document.querySelectorAll('.faq-question').forEach(btn => {
+      btn.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          const item = btn.parentElement;
+          const isOpen = item.classList.toggle('open');
+          btn.setAttribute('aria-expanded', String(isOpen));
+        }
+      });
+    });
+  </script>
+</body>
+</html>
