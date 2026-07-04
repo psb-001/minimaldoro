@@ -4,6 +4,7 @@
 ![Electron](https://img.shields.io/badge/Electron-33.x-green)
 ![Svelte](https://img.shields.io/badge/Svelte-5.x-orange)
 ![License](https://img.shields.io/badge/license-MIT-brightgreen)
+[![Release](https://img.shields.io/github/v/release/psb-001/minimaldoro?label=download)](https://github.com/psb-001/minimaldoro/releases/latest)
 
 Minimaldoro is an elegant desktop countdown timer and event tracker for Windows. Track upcoming events, celebrate milestones, and stay on top of what matters — all from your system tray and desktop widgets.
 
@@ -91,7 +92,7 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## Roadmap
 
-- [ ] Windows installer with auto-update
+- [x] Windows installer with auto-update
 - [ ] Multi-monitor widget support
 - [ ] Theme support (dark/light/system)
 - [ ] Export/import events
