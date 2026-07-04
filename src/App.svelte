@@ -233,7 +233,7 @@
 {#if confirmDeleteId}
    <!-- svelte-ignore a11y_click_events_have_key_events a11y_no_static_element_interactions -->
    <div class="backdrop" role="dialog" aria-modal="true" tabindex="-1" onclick={() => (confirmDeleteId = null)} onkeydown={handleConfirmKeydown}>
-    <div class="confirm-dialog" role="dialog" onclick={(e) => e.stopPropagation()}>
+    <div class="confirm-dialog" onclick={(e) => e.stopPropagation()}>
       <div class="confirm-title">Delete event?</div>
       <div class="confirm-text">This cannot be undone.</div>
       <div class="confirm-actions">
