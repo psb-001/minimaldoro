@@ -28,7 +28,7 @@ jobs:
         run: npx vite build
 
       - name: Build Electron app
-        run: npx electron-builder --win
+        run: npx electron-builder --win --publish never
         env:
           CSC_IDENTITY_AUTO_DISCOVERY: "false"
 
