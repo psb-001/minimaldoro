@@ -15,6 +15,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <script data-goatcounter="https://minimaldoro.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
   <style>
     :root {
       --orange: #fa520f;
@@ -32,7 +34,7 @@
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
+    html { scroll-behavior: smooth; overflow-x: hidden; }
 
     body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -179,6 +181,7 @@
       padding: 80px 24px 60px;
       text-align: center;
       overflow: hidden;
+      width: 100%;
     }
 
     .hero::before {
@@ -288,6 +291,8 @@
     /* ─── Product Mockup ─── */
     .mockup-section {
       padding: 40px 0 100px;
+      overflow: hidden;
+      width: 100%;
     }    .mockup-window {
       max-width: min(900px, 100%);
       margin: 0 auto;
@@ -685,6 +690,8 @@
       text-align: center;
       border-top: 1px solid var(--surface-border);
       position: relative;
+      overflow: hidden;
+      width: 100%;
     }
 
     .cta-section::before {
@@ -836,17 +843,27 @@
       .nav-links { display: none; }
       .hamburger { display: flex; }
       .hero { padding-top: 100px; }
+      .hero::before { width: 400px; height: 400px; }
       .how-steps { grid-template-columns: 1fr; gap: 8px; }
       .req-grid { grid-template-columns: 1fr; }
-      .mockup-body { flex-direction: column; align-items: center; }
+      .mockup-body { flex-direction: column; align-items: center; padding: 20px 16px; }
       .mockup-app-card { width: 100%; max-width: 320px; }
+      .mockup-widget { width: 100%; max-width: 160px; }
       .footer-top { flex-direction: column; }
+      .cta-section::before { width: 300px; height: 200px; }
+      .section-title { font-size: clamp(24px, 5vw, 40px); }
     }
 
     @media (max-width: 480px) {
-      .hero h1 { font-size: 40px; letter-spacing: -1px; }
+      .hero h1 { font-size: 36px; letter-spacing: -1px; }
       .hero-sub { font-size: 15px; }
-      .mockup-app-card { width: 100%; }
+      .mockup-app-card { width: 100%; max-width: 280px; }
+      .mockup-event-name { font-size: 12px; }
+      .mockup-event-date { font-size: 10px; }
+      .mockup-event-countdown { font-size: 11px; }
+      .mockup-widget-countdown { font-size: 32px; }
+      .req-card { padding: 16px; }
+      .btn { padding: 10px 18px; font-size: 13px; }
     }
 
     /* ─── Reduced Motion ─── */
