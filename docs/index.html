@@ -1294,16 +1294,24 @@
     // Track download and GitHub clicks with GoatCounter
     document.querySelectorAll('a[href*="releases/download"]').forEach(link => {
       link.addEventListener('click', () => {
-        if (window.goatcounter) {
-          window.goatcounter.count({path: '/download', title: 'Download'});
+        if (window.goatcounter && window.goatcounter.count) {
+          window.goatcounter.count({
+            path: 'download',
+            title: 'Download App',
+            event: true
+          });
         }
       });
     });
 
     document.querySelectorAll('a[href*="github.com/psb-001/minimaldoro"]').forEach(link => {
       link.addEventListener('click', () => {
-        if (window.goatcounter) {
-          window.goatcounter.count({path: '/github', title: 'GitHub Visit'});
+        if (window.goatcounter && window.goatcounter.count) {
+          window.goatcounter.count({
+            path: 'github-visit',
+            title: 'GitHub Visit',
+            event: true
+          });
         }
       });
     });
