@@ -18,6 +18,10 @@ jobs:
         with:
           node-version: 20
 
+      - name: Install Windows build tools
+        run: |
+          choco install python visualstudio2022-workload-vctools -y
+
       - name: Install dependencies
         run: npm ci
 
