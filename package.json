@@ -1,6 +1,6 @@
 {
   "name": "minimaldoro",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Elegant countdown timer and event tracker for your desktop. Track upcoming events, celebrate milestones, and stay on top of what matters — all from your menubar.",
   "author": "psb-001 <psb001@users.noreply.github.com>",
   "private": true,
