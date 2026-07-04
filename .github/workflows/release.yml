@@ -48,10 +48,10 @@ jobs:
           retention-days: 30
 
       - name: Delete old release assets
-        uses: andelf/delete-release-asset@main
-        with:
-          tag: ${{ github.ref_name }}
-          asset_name_glob: '*.exe'
+        run: |
+          gh release view ${{ github.ref_name }} --json assets -q '.assets[] | select(.name | endswith(".exe")) | .name' | while read -r name; do
+            gh release delete-asset ${{ github.ref_name }} "$name" -y
+          done
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         continue-on-error: true
